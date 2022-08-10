@@ -1,21 +1,33 @@
 import React from "react";
 import memData from "../helpers/memData";
+import Count from "./count";
 
 export default function Meme(){
-    let [memeImage, setMemeImage] = React.useState('')
+    let [meme, setMeme] = React.useState({
+        topText: '',
+        bottomText: '',
+        randomImage: 'http://i.imgflip.com/1bij.jpg'
+    })
+
+    let [allMemeImages, setAllMemeImages] = React.useState(memData)
 
     function getMemeImage(args){
+        console.log(allMemeImages,setAllMemeImages)
         let newImg = memData.data[Math.floor(Math.random() * memData.data.length)].url
-        setMemeImage(prevImg => newImg)
+        setMeme(prevMeme => ({
+            ...prevMeme,
+            randomImage: newImg
+        }))
     }
 
-    let thingsArray = ['Thing 1', 'Thing 2', 'Thing 3']
-    let[things, setThings] = React.useState(thingsArray)
-    console.log(things)
-    let thingsElements = things.map(thing => <p key={thing}>{thing}</p>)
+    const [count, setCount] = React.useState(0)
 
-    function addItem(){
-        setThings(oldArray => [...oldArray,`Thing ${oldArray.length + 1}`])
+    function increment(){
+        setCount(prevCount => prevCount + 1)
+    }
+
+    function decrement(){
+        setCount(prevCount => prevCount -1)
     }
 
    
@@ -35,16 +47,17 @@ export default function Meme(){
             <input type='submit' onClick={getMemeImage}  className="btn col-12 text-white mt-4 fs-bold" style={{'backgroundColor': "#672280",fontSize: '16px'}} value='Get new meme image'></input>
 
             <div className="mt-4">
-                {/* <img src={} className='col alt='image'></img> */}
-                <a href={memeImage } > {memeImage}</a>
+                <img src={meme.randomImage} className='col' alt={meme.randomImage}></img>
+                <a href={meme.randomImage } > {meme.randomImage}</a>
             </div>
+        </div>
 
-            <div className="things mt-4">
-                <button className="btn btn-success" onClick={addItem}>
-                    Add Item
-                </button>
-                {thingsElements}
-            </div>
+        <Count number= {count}/>
+        <br/>
+        <div className="row">
+
+        <div className="col btn btn-success fs-3 p-3" onClick={increment}>  + </div>
+        <div className="col btn btn-danger fs-3 p-3" onClick={decrement}>  - </div>
         </div>
         </div>
     )
